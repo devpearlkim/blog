@@ -14,14 +14,8 @@ type FormState = {
 
 const SigninForm = () => {
   const wrappedSigninUser = async (state: FormState): Promise<FormState> => {
-    const formData = new FormData();
-    formData.set(
-      "email",
-      (document.querySelector('[name="email"]') as HTMLInputElement)?.value
-    );
-    formData.set(
-      "password",
-      (document.querySelector('[name="password"]') as HTMLInputElement)?.value
+    const formData = new FormData(
+      document.querySelector("form") as HTMLFormElement
     );
 
     return signinUser({ prevState: state, formData });

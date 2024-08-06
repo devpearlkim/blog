@@ -14,24 +14,17 @@ type FormState = {
 
 const SignupForm = () => {
   const wrappedRegisterUser = async (state: FormState): Promise<FormState> => {
-    const formData = new FormData();
-    formData.set(
-      "email",
-      (document.querySelector('[name="email"]') as HTMLInputElement)?.value
-    );
-    formData.set(
-      "password",
-      (document.querySelector('[name="password"]') as HTMLInputElement)?.value
+    const formData = new FormData(
+      document.querySelector("form") as HTMLFormElement
     );
 
     return registerUser({ prevState: state, formData });
   };
 
-  const [formState, action] = useFormState<FormState>(
+  const [formState, action] = useFormState<{ message: string | null }>(
     wrappedRegisterUser,
     initState
   );
-
   return (
     <form
       action={action}
