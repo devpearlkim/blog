@@ -19,6 +19,11 @@ type RegisterUserArgs = {
   formData: FormData;
 };
 
+type SigninUserArgs = {
+  prevState: FormState;
+  formData: FormData;
+};
+
 export const registerUser = async ({
   prevState,
   formData,
@@ -45,7 +50,10 @@ export const registerUser = async ({
   redirect("/dashboard");
 };
 
-export const signinUser = async (prevState: FormState, formData: FormData) => {
+export const signinUser = async ({
+  prevState,
+  formData,
+}: SigninUserArgs): Promise<FormState> => {
   try {
     const data = authSchema.parse({
       email: formData.get("email"),

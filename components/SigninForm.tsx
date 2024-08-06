@@ -8,9 +8,27 @@ import Submit from "./Submit";
 
 const initState = { message: null };
 
+type FormState = {
+  message: string | null;
+};
+
 const SigninForm = () => {
+  const wrappedSigninUser = async (state: FormState): Promise<FormState> => {
+    const formData = new FormData();
+    formData.set(
+      "email",
+      (document.querySelector('[name="email"]') as HTMLInputElement)?.value
+    );
+    formData.set(
+      "password",
+      (document.querySelector('[name="password"]') as HTMLInputElement)?.value
+    );
+
+    return signinUser({ prevState: state, formData });
+  };
+
   const [formState, action] = useFormState<{ message: string | null }>(
-    signinUser,
+    wrappedSigninUser,
     initState
   );
 
