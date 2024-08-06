@@ -8,11 +8,12 @@ import Submit from "./Submit";
 
 const initState = { message: null };
 
+type FormState = {
+  message: string | null;
+};
+
 const SignupForm = () => {
-  const [formState, action] = useFormState<{ message: string | null }>(
-    registerUser,
-    initState
-  );
+  const [formState, action] = useFormState<FormState>(registerUser, initState);
   return (
     <form
       action={action}

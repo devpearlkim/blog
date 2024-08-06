@@ -45,7 +45,7 @@ export const registerUser = async ({
   redirect("/dashboard");
 };
 
-export const signinUser = async (prevState: any, formData: FormData) => {
+export const signinUser = async (prevState: FormState, formData: FormData) => {
   try {
     const data = authSchema.parse({
       email: formData.get("email"),
