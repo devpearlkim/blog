@@ -15,12 +15,15 @@ export const getUserFromToken = async (token: {
   name: string;
   value: string;
 }) => {
-  const payload = jwt.verify(token.value, SECRET) as { id: string };
-
-  await connectDB();
-  const user = await User.findById(payload.id).select("id email createdAt");
-
-  return user;
+  try {
+    const payload = jwt.verify(token.value, SECRET) as { id: string };
+    await connectDB();
+    const user = User.findById(payload.id).select("id email createdAt");
+    return user;
+  } catch (error) {
+    console.error("Error getting user from token:", error);
+    throw new Error("Invalid token");
+  }
 };
 
 export const signin = async ({
@@ -40,7 +43,6 @@ export const signin = async ({
   if (!correctPW) {
     throw new Error("invalid user");
   }
-
   const token = createTokenForUser(match.id);
   const { password: pw, ...user } = match.toObject();
 

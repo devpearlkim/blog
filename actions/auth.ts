@@ -10,7 +10,19 @@ const authSchema = z.object({
   password: z.string(),
 });
 
-export const registerUser = async (prevState: any, formData: FormData) => {
+type FormState = {
+  message: string | null;
+};
+
+type RegisterUserArgs = {
+  prevState: FormState;
+  formData: FormData;
+};
+
+export const registerUser = async ({
+  prevState,
+  formData,
+}: RegisterUserArgs): Promise<FormState> => {
   try {
     const data = authSchema.parse({
       email: formData.get("email"),
@@ -20,13 +32,15 @@ export const registerUser = async (prevState: any, formData: FormData) => {
     const { token } = await signup(data);
     cookies().set(COOKIE_NAME, token);
   } catch (e) {
-    console.error(e);
-    if (e.message === "db insert error") {
-      return {
-        message: "이미 가입된 이메일입니다.",
-      };
+    if (e instanceof Error) {
+      console.error(e);
+      if (e.message === "db insert error") {
+        return {
+          message: "이미 가입된 이메일입니다.",
+        };
+      }
+      return { message: "회원가입에 실패했습니다. 잠시 후 시도해주세요." };
     }
-    return { message: "회원가입에 실패했습니다. 잠시 후 시도해주세요." };
   }
   redirect("/dashboard");
 };
