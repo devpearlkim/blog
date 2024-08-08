@@ -6,16 +6,12 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-console.log("MONGODB_URI:", process.env.MONGODB_URI); // 환경변수에서 URI를 가져옵니다.
-// MongoDB 연결 설정
 const uri = process.env.MONGODB_URI;
 if (!uri) {
   throw new Error("MONGODB_URI environment variable is not set");
 }
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+
+const client = new MongoClient(uri);
 
 const db = client.db("ess");
 const pcsCollection = db.collection("pcs");
@@ -51,7 +47,7 @@ const sendData = async () => {
         _id: new ObjectId("64d0f1c8b2345d67890a1b23"),
       });
       if (data) {
-        messagesNamespace.emit("data", data); // Send data to all clients
+        messagesNamespace.emit("data", data);
         console.log(`Sent data: ${JSON.stringify(data)}`);
       } else {
         console.log("No data found.");
@@ -67,7 +63,8 @@ sendData().catch((err) =>
   console.error(`Failed to start background tasks: ${err}`)
 );
 
-const PORT = 8000;
-server.listen(PORT, () => {
-  console.log(`Server is listening on http://localhost:${PORT}`);
+const SOCKET_PORT = 8000;
+
+server.listen(SOCKET_PORT, () => {
+  console.log(`Server is listening on http://localhost:${SOCKET_PORT}`);
 });
